@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "Alias 'ls' has been created with the value 'rm *'"
