@@ -1,16 +1,2 @@
 #!/bin/bash
-
-# List files in the current directory in long format
-echo "total $(ls -lA | wc -l)"
 ls -lA
-
-# List files in the parent directory in long format
-echo -e "\n..:"
-echo "total $(ls -lA .. | wc -l)"
-ls -lA ..
-
-# List files in the /boot directory in long format
-echo -e "\n/boot:"
-echo "total $(ls -lA /boot | wc -l)"
-ls -lA /boot
-
