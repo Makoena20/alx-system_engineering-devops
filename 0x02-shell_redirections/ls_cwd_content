@@ -1,0 +1,9 @@
+total 20
+drwxr-xr-x 2 root root 114 Nov  7 22:30 .
+drwxr-xr-x 4 root root  49 Nov  7 05:38 ..
+-rwxr-xr-x 1 root root  35 Nov  7 05:42 5-firstlines
+-rwxr-xr-x 1 root root  40 Nov  7 22:07 6-third_line
+-rwxr-xr-x 1 root root  75 Nov  7 22:13 7-file
+-rwxr-xr-x 1 root root  36 Nov  7 22:15 8-cwd_state
+-rw-r--r-- 1 root root 744 Nov  7 22:05 iacta
+-rw-r--r-- 1 root root   0 Nov  7 22:30 ls_cwd_content
