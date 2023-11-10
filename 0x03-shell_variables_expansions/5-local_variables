@@ -1,2 +1,2 @@
 #!/bin/bash
-set | grep -E '^[a-zA-Z_]+='; declare -F
+env; set
