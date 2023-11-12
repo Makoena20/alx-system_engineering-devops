@@ -1,2 +1,0 @@
-#!/bin/bash
- echo "Copied $filename to $dst_dir/"
