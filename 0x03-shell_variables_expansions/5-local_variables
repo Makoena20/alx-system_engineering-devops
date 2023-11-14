@@ -1,2 +1,0 @@
-#!/bin/bash
-set | grep -E '^[A-Za-z_][A-Za-z0-9_]*='; declare -F
