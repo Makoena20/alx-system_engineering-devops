@@ -1,0 +1,2 @@
+#!/bin/bash
+shopt -s extglob; for file in *~; do rm -- "$file"; done
