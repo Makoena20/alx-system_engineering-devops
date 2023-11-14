@@ -1,2 +1,2 @@
 #!/bin/bash
-while IFS=':' read -r user _ _ _ _ home _; do printf "%s:%s\n" "$user" "$home"; done < /etc/passwd | sort -t ':' -k1
+while IFS=':' read -r user x uid gid info home shell; do echo "$user:$home"; done < /etc/passwd | sort -t':' -k1
