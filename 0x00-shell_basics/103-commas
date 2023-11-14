@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -a | sed 's/ /\\ /g' | awk '{printf "%s, ", $0}' | sed 's/,\s$/\n/'
+ls -1a | LC_COLLATE=C sort -k1,1d -k2,2n -t$'\0' | sed -z 's/\n/, /g;s/,$/\n/'
