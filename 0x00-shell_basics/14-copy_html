@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -u --ignore-existing --exclude='*' --include='*.html' . ../
+find . -maxdepth 1 -name "*.html" -exec rsync -u --ignore-existing {} ../ \;
