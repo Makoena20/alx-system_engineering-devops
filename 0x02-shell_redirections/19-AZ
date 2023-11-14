@@ -1,2 +1,2 @@
 #!/bin/bash
-sed 'y/Ac/Ze/; y/ac/ze/' 
+echo 'Replace all characters `A` and `c` from input to `Z` and `e`.' | tr 'Ac' 'Ze'
