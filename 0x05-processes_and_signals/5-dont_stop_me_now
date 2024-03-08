@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script starts a process that should not be stopped by the user.
+
+# Start the process that should not be stopped
+./4-to_infinity_and_beyond &
+
+# Keep the script running to prevent the user from stopping the process
+while true; do
+    sleep 1
+done
+
