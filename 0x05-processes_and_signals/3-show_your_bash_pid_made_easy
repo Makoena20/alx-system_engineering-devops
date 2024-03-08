@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# This script displays the PID and process name of processes whose name contain the word 'bash'
+
+# Get the PID of the current script
+script_pid=$$
+
+# Get the PIDs and process names of processes containing the word 'bash'
+# Iterate over each process in /proc
+for pid_dir in /proc/*/; do
+    # Check if the entry in /proc is a directory containing a number
+    if [[ -d "$pid_dir" && "$pid_dir" =~ /proc/([0-9]+)/ ]]; then
+        pid="${BASH_REMATCH[1]}"
+        # Check if the process name contains the word 'bash'
+        if grep -q "bash" "$pid_dir/cmdline" 2>/dev/null; then
+            # Exclude the PID of the current script
+            if [ "$pid" != "$script_pid" ]; then
+                # Display PID and process name
+                echo "$pid bash"
+            fi
+        fi
+    fi
+done
+
