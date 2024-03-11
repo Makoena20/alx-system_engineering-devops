@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
+# This script groups visitors by IP and HTTP status code, and displays the data.
 
-# Extract IP and HTTP status code, then count occurrences and sort
-awk '{print $1,$9}' | sort | uniq -c | sort -nr | awk '{print $2, $3, $1}'
+awk '{print $1 " " $4 " " $9}' | awk '{count[$2 " " $3]++} END {for (ip_status in count) print count[ip_status], ip_status}' | sort -rn
 
