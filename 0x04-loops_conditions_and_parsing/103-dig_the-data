@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Extract IP and HTTP status code, then count occurrences and sort
+awk '{print $1,$9}' | sort | uniq -c | sort -nr | awk '{print $2, $3, $1}'
+
