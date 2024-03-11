@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# This script tells the story of /etc/passwd
+
+# Set the input field separator to ':'
+IFS=":"
+
+# Read the file /etc/passwd line by line
+while read -r USERNAME PASSWORD USER_ID GROUP_ID GECOS HOME_DIRECTORY SHELL; do
+    # Display user information
+    echo "The user $USERNAME is part of the $GROUP_ID gang, lives in $HOME_DIRECTORY and rides $SHELL. $USER_ID's place is protected by the passcode $PASSWORD, more info about the user here: $GECOS"
+done </etc/passwd
+
