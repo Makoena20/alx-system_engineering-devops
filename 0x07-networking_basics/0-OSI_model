@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # This script prints the answer to a question about the OSI model.
 
-echo "2"
+2
+2
 
