@@ -3,7 +3,7 @@
 # This script prints the answer to questions about the OSI model.
 
 echo "What is the OSI model?"
-echo "2"
+echo "1"
 
 echo "How is the OSI model organized?"
 echo "2"
