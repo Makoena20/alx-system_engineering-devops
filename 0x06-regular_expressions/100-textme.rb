@@ -1,17 +1,15 @@
 #!/usr/bin/env ruby
 
-# Regular expression to extract sender, receiver, and flags from the log
-regex = /\[from:(?<sender>[^\]]+)\] \[to:(?<receiver>[^\]]+)\] \[flags:(?<flags>[^\]]+)\]/
+# Regex pattern for extracting sender, receiver, and flags
+pattern = /\[from:(?<sender>[^\]]+)\] \[to:(?<receiver>[^\]]+)\] \[flags:(?<flags>[^\]]+)\]/
 
-# Loop through each line of input
+# Read each line from stdin
 ARGF.each_line do |line|
-  # Match the regular expression against the line
-  match = line.match(regex)
-
-  # If there's a match, extract sender, receiver, and flags
+  # Match the pattern against the line
+  match = line.match(pattern)
   if match
-    sender = match[:sender].gsub(/^(\+)?/, '') # remove leading '+' if present
-    receiver = match[:receiver].gsub(/^(\+)?/, '') # remove leading '+' if present
+    sender = match[:sender]
+    receiver = match[:receiver]
     flags = match[:flags]
     puts "#{sender},#{receiver},#{flags}"
   end
