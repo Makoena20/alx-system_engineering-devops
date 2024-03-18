@@ -1,8 +1,14 @@
 #!/usr/bin/env ruby
 
-# Regular expression to match 'hbtn'
-regex = /hbt{2,5}n/
+# Regular expression that matches h followed by any single character,
+# and then t followed by 1 or more instances of 't'
+regex = /h.t+t+/
 
-# Accepting command line argument
-puts ARGV[0].scan(regex).join
+# The argument passed to the script
+arg = ARGV[0]
+
+# Check if the argument matches the regular expression
+if arg.match?(regex)
+  puts arg
+end
 
