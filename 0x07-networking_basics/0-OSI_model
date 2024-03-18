@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-
 # This script prints the answer to questions about the OSI model.
 
-echo "What is the OSI model?"
-echo "1"
+Question 1:What is the OSI model?
+2
 
-echo "How is the OSI model organized?"
-echo "2"
+Question 2:How is the OSI model organized?
+2
 
