@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 # This script changes the IP address resolution for localhost and facebook.com
 
-# Backup hosts file
-cp /etc/hosts /etc/hosts.backup
+# Update hosts file
+sudo sed -i 's/^127.0.0.1.*localhost$/127.0.0.2 localhost/g' /etc/hosts
+sudo sed -i 's/^.*facebook.com$/8.8.8.8 facebook.com/g' /etc/hosts
 
-# Configure hosts file
-sed -i 's/^127.0.0.1\s*localhost$/127.0.0.2 localhost/' /etc/hosts
-sed -i 's/^.*\bfacebook.com\b.*/8.8.8.8 facebook.com/' /etc/hosts
-
-# Check if changes are applied
-ping -c 1 localhost | grep "127.0.0.2"
-ping -c 1 facebook.com | grep "8.8.8.8"
+# Flush DNS cache
+sudo systemd-resolve --flush-caches
 
