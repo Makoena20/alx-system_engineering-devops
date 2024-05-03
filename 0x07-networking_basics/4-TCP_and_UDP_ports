@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
+# This script displays listening ports showing the PID and name of the program to which each socket belongs
 
-# This Bash script displays listening ports
-
-# Display listening TCP ports
-echo "Active Internet connections (only servers)"
-echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
-netstat -tuln | grep '^tcp' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7}' | sed 's/:::/[::]/g'
-
-# Display listening UDP ports
-netstat -uln | grep '^udp' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t\t\t"$6"\t"$7}' | sed 's/:::/[::]/g'
+netstat -tuln | awk 'NR > 2 {print $1, $4, $7}' | column -t
 
