@@ -1,55 +1,48 @@
-# This Puppet manifest installs and configures Nginx server
-class nginx {
-    package { 'nginx':
-        ensure => installed,
-    }
+# 7-puppet_install_nginx_web_server.pp
 
-    file { '/var/www/html/index.html':
-        ensure  => file,
-        content => "Hello World!\n",
-    }
-
-    file { '/etc/nginx/sites-available/default':
-        ensure  => file,
-        source  => 'puppet:///modules/nginx/default',
-        require => Package['nginx'],
-        notify  => Service['nginx'],
-    }
-
-    file { '/etc/nginx/sites-enabled/default':
-        ensure  => 'link',
-        target  => '/etc/nginx/sites-available/default',
-        notify  => Service['nginx'],
-    }
-
-    service { 'nginx':
-        ensure     => 'running',
-        enable     => true,
-        hasrestart => true,
-    }
+# Install Nginx
+package { 'nginx':
+  ensure => installed,
 }
 
-class nginx::redirect {
-    file { '/etc/nginx/sites-available/redirect':
-        ensure  => file,
-        content => "
-            server {
-                listen 80;
-                server_name _;
-                return 301 http://$host$request_uri;
-            }
-        ",
-        require => Package['nginx'],
-        notify  => Service['nginx'],
-    }
-
-    file { '/etc/nginx/sites-enabled/redirect':
-        ensure  => 'link',
-        target  => '/etc/nginx/sites-available/redirect',
-        notify  => Service['nginx'],
-    }
+# Configure Nginx to listen on port 80
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => template('nginx/default.conf.erb'),
+  notify  => Service['nginx'],
 }
 
-include nginx
-include nginx::redirect
+# Create a template for the default Nginx configuration
+file { '/etc/nginx/sites-available/default.conf':
+  ensure => file,
+  content => '
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+        return 200 "Hello World!";
+    }
+
+    location /redirect_me {
+        return 301 https://alx.com;
+    }
+}
+',
+  notify  => Service['nginx'],
+}
+
+# Restart Nginx after configuration changes
+service { 'nginx':
+  ensure     => running,
+  enable     => true,
+  hasrestart => true,
+  hasstatus  => true,
+  require    => Package['nginx'],
+}
