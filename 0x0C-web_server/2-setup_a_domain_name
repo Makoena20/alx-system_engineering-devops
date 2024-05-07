@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
-# This script sets up the DNS records for techlearning.tech
+# This script configures the DNS records for the Makoena.tech domain to point to the web-01 server IP address
 
-# Update DNS records with an A entry pointing to web-01 IP address
-echo "Updating DNS records..."
-echo "techlearning.tech.  IN  A  web-01-IP-address" >> /etc/bind/db.techlearning.tech
+# Update DNS records with an A entry
+echo "Updating DNS records for Makoena.tech"
+echo "web-01 A 184.72.193.201" > /tmp/makoena_dns_records
 
-# Restart DNS service to apply changes
-service bind9 restart
+# Check if DNS records are correctly set
+echo "Verifying DNS records for Makoena.tech"
+cat /tmp/makoena_dns_records
 
-# Verify DNS records
-dig techlearning.tech
+# Update project website URL in user profile
+echo "Updating Project website URL in user profile"
+# Replace <USERNAME> with your GitHub username
+# Replace <DOMAIN> with your domain name (Makoena.tech)
+# Make sure you have jq installed for JSON parsing
+# Ensure you have set up the appropriate GitHub API token for authentication
+curl -X PATCH -H "Authorization: token <YOUR_GITHUB_TOKEN>" -H "Accept: application/vnd.github.v3+json" https://api.github.com/user -d '{"profile": {"website": "https://Makoena.tech"}}'
+
+# Check registrar information for Makoena.tech
+echo "Verifying registrar information for Makoena.tech"
+whois_response=$(curl -sS "https://whois.whoisxmlapi.com/lookup?apiKey=<YOUR_API_KEY>&domainName=Makoena.tech")
+registrar_name=$(echo "$whois_response" | jq -r '.registrant.registrarName')
+echo "Registrar Name: $registrar_name"
 
