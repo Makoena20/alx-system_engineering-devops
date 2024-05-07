@@ -1,28 +1,13 @@
 #!/usr/bin/env bash
-# This script sets up a .tech domain with an A entry pointing to web-01 IP address
+# This script sets up the DNS records for techlearning.tech
 
-DOMAIN="yourdomain.tech"
-IP="your_web-01_IP_address"
+# Update DNS records with an A entry pointing to web-01 IP address
+echo "Updating DNS records..."
+echo "techlearning.tech.  IN  A  web-01-IP-address" >> /etc/bind/db.techlearning.tech
 
-# Configure DNS records
-echo "Setting up DNS records for $DOMAIN"
-# Assuming the DNS provider has a CLI tool for managing DNS records
-# Replace the following command with the appropriate command for your DNS provider
-dns_provider_command --set-a-record "$DOMAIN" "$IP"
+# Restart DNS service to apply changes
+service bind9 restart
 
-# Verify DNS propagation
-echo "Verifying DNS propagation for $DOMAIN"
-dig "$DOMAIN"
-
-# Update Project website URL in GitHub profile
-echo "Updating Project website URL in GitHub profile"
-# Assuming there's a GitHub CLI tool for updating user profile
-# Replace the following command with the appropriate command for updating GitHub profile
-github_cli_command --update-profile-website "https://$DOMAIN"
-
-# Check registrar using whois
-echo "Checking registrar for $DOMAIN"
-whois_response=$(curl -s "https://whois.whoisxmlapi.com/lookup?apiKey=YOUR_API_KEY&domainName=$DOMAIN")
-registrar=$(jq -r '.WhoisRecord.registrarName' <<< "$whois_response")
-echo "Registrar: $registrar"
+# Verify DNS records
+dig techlearning.tech
 
