@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# This script sets up a .tech domain with an A entry pointing to web-01 IP address
+
+DOMAIN="yourdomain.tech"
+IP="your_web-01_IP_address"
+
+# Configure DNS records
+echo "Setting up DNS records for $DOMAIN"
+# Assuming the DNS provider has a CLI tool for managing DNS records
+# Replace the following command with the appropriate command for your DNS provider
+dns_provider_command --set-a-record "$DOMAIN" "$IP"
+
+# Verify DNS propagation
+echo "Verifying DNS propagation for $DOMAIN"
+dig "$DOMAIN"
+
+# Update Project website URL in GitHub profile
+echo "Updating Project website URL in GitHub profile"
+# Assuming there's a GitHub CLI tool for updating user profile
+# Replace the following command with the appropriate command for updating GitHub profile
+github_cli_command --update-profile-website "https://$DOMAIN"
+
+# Check registrar using whois
+echo "Checking registrar for $DOMAIN"
+whois_response=$(curl -s "https://whois.whoisxmlapi.com/lookup?apiKey=YOUR_API_KEY&domainName=$DOMAIN")
+registrar=$(jq -r '.WhoisRecord.registrarName' <<< "$whois_response")
+echo "Registrar: $registrar"
+
