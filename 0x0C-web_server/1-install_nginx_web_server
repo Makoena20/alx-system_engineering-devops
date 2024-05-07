@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script installs and configures Nginx on an Ubuntu machine to serve a Hello World page.
+
+# Install Nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Configure Nginx to listen on port 80 and serve Hello World page
+echo "Hello World!" > /usr/share/nginx/html/index.html
+
+# Restart Nginx without using systemctl
+kill -HUP $(pgrep nginx)
+
+# End of script
+
