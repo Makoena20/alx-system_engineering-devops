@@ -1,35 +1,35 @@
 #!/usr/bin/env bash
-# This script configures Nginx to redirect /redirect_me to another page with a 301 Moved Permanently response
+# This script configures an Nginx server to redirect /redirect_me to another page with a 301 Moved Permanently response
 
 # Install Nginx if not already installed
-if ! dpkg -s nginx &>/dev/null; then
+if ! command -v nginx &>/dev/null; then
     apt-get update
     apt-get install -y nginx
 fi
 
-# Create a configuration file for the redirection
+# Configure the redirection
+REDIRECT_CONFIG="/etc/nginx/sites-available/redirect_me"
 echo "server {
     listen 80 default_server;
     listen [::]:80 default_server;
 
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
     server_name _;
 
     location /redirect_me {
-        return 301 https://www.example.com/new_page;
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
 
-    # Disable default Nginx page
     location / {
-        return 404;
+        try_files $uri $uri/ =404;
     }
-}" > /etc/nginx/sites-available/redirect_me
+}" >"$REDIRECT_CONFIG"
 
-# Create a symbolic link to enable the configuration
-ln -sf /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+# Create a symbolic link to enable the site
+ln -sf "$REDIRECT_CONFIG" /etc/nginx/sites-enabled/
 
-# Test Nginx configuration
-nginx -t
-
-# Reload Nginx to apply changes
-service nginx reload
+# Test Nginx configuration and restart the server
+nginx -t && nginx -s reload
 
