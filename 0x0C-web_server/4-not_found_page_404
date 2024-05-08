@@ -1,32 +1,62 @@
 #!/usr/bin/env bash
 
-# This Bash script configures a new Ubuntu machine to have a custom 404 page with the string "Ceci n'est pas une page"
+# This Bash script configures a new Ubuntu machine to return a custom 404 page containing the string "Ceci n'est pas une page" using Nginx.
 
+# Install Nginx
 sudo apt-get update
-sudo apt-get install nginx -y
+sudo apt-get install -y nginx
 
-cat <<EOF > /etc/nginx/sites-available/default
+# Create a custom 404 page containing the string "Ceci n'est pas une page"
+sudo bash -c 'cat <<EOF > /usr/share/nginx/html/404.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>404 Not Found</title>
+</head>
+<body>
+  <h1>Not Found</h1>
+  <p>Ceci n'est pas une page</p>
+</body>
+</html>
+EOF'
+
+# Configure Nginx to use the custom 404 page
+sudo bash -c 'cat <<EOF > /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
 
     root /var/www/html;
+
     index index.html index.htm index.nginx-debian.html;
 
     server_name _;
 
     location / {
-        try_files $uri $uri/ =404;
+        try_files \$uri \$uri/ =404;
     }
 
     error_page 404 /404.html;
     location = /404.html {
+        root /usr/share/nginx/html;
         internal;
-        root /var/www/html;
-        return 404 "Ceci n'est pas une page";
+    }
+
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
     }
 }
-EOF
+EOF'
 
+# Restart Nginx to apply the changes
 sudo systemctl restart nginx
 
