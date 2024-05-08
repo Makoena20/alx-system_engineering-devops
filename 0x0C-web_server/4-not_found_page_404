@@ -1,27 +1,32 @@
 #!/usr/bin/env bash
-# This Bash script configures a new Ubuntu machine to have a custom 404 page that contains the string "Ceci n'est pas une page"
 
-# Install nginx
+# This Bash script configures a new Ubuntu machine to have a custom 404 page with the string "Ceci n'est pas une page"
+
 sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt-get install nginx -y
 
-# Create custom 404 page
-echo "<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>Error 404 - Not Found</title>
-</head>
-<body>
-    <h1>Error 404 - Not Found</h1>
-    <p>Ceci n'est pas une page</p>
-</body>
-</html>" | sudo tee /usr/share/nginx/html/404.html
+cat <<EOF > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-# Configure nginx to use custom 404 page
-sudo sed -i '/server_name _;/a \\t\terror_page 404 /404.html;' /etc/nginx/sites-available/default
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
 
-# Restart nginx to apply changes
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+        root /var/www/html;
+        return 404 "Ceci n'est pas une page";
+    }
+}
+EOF
+
 sudo systemctl restart nginx
 
