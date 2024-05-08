@@ -1,48 +1,39 @@
-# 7-puppet_install_nginx_web_server.pp
+# Puppet manifest to install and configure Nginx server
 
-# Install Nginx
+# Install Nginx package
 package { 'nginx':
   ensure => installed,
 }
 
-# Configure Nginx to listen on port 80
+# Ensure Nginx service is running and enabled
+service { 'nginx':
+  ensure => running,
+  enable => true,
+}
+
+# Define Nginx server block
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
-  content => template('nginx/default.conf.erb'),
-  notify  => Service['nginx'],
-}
-
-# Create a template for the default Nginx configuration
-file { '/etc/nginx/sites-available/default.conf':
-  ensure => file,
-  content => '
+  content => "
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-
+    listen 80;
     server_name _;
-
     location / {
-        try_files $uri $uri/ =404;
-        return 200 "Hello World!";
+        return 200 'Hello World!\n';
     }
-
     location /redirect_me {
-        return 301 https://alx.com;
+        return 301 /;
     }
 }
-',
+",
   notify  => Service['nginx'],
 }
 
-# Restart Nginx after configuration changes
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  hasrestart => true,
-  hasstatus  => true,
-  require    => Package['nginx'],
+# Enable default server block
+file { '/etc/nginx/sites-enabled/default':
+  ensure  => 'link',
+  target  => '/etc/nginx/sites-available/default',
+  require => File['/etc/nginx/sites-available/default'],
+  notify  => Service['nginx'],
 }
+
