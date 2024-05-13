@@ -1,14 +1,17 @@
-# File: 2-puppet_custom_http_response_header.pp
+# 2-puppet_custom_http_response_header.pp
+#
+# Puppet manifest to install Nginx and configure it to add a custom HTTP header
+# X-Served-By with the hostname of the server.
 
-# Install nginx package
+# Install Nginx package
 package { 'nginx':
   ensure => installed,
 }
 
-# Define custom HTTP header
+# Define Nginx server configuration
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
-  replace => true,
+  mode    => '0644',
   content => "
 server {
     listen 80 default_server;
@@ -20,25 +23,27 @@ server {
     server_name _;
 
     location / {
-        try_files $uri $uri/ =404;
-        add_header X-Served-By $hostname;
+        try_files \$uri \$uri/ =404;
+        add_header X-Served-By \$hostname;
     }
 }
 ",
+  notify => Service['nginx'],
+}
+
+# Enable Nginx site configuration
+file { '/etc/nginx/sites-enabled/default':
+  ensure  => 'link',
+  target  => '/etc/nginx/sites-available/default',
+  require => File['/etc/nginx/sites-available/default'],
   notify  => Service['nginx'],
 }
 
-# Enable site configuration
-file { '/etc/nginx/sites-enabled/default':
-  ensure  => link,
-  target  => '/etc/nginx/sites-available/default',
-  require => File['/etc/nginx/sites-available/default'],
-}
-
-# Restart nginx service to apply changes
+# Restart Nginx service when configuration changes
 service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => File['/etc/nginx/sites-available/default'],
+  ensure     => running,
+  enable     => true,
+  hasrestart => true,
+  subscribe  => File['/etc/nginx/sites-available/default'],
 }
 
