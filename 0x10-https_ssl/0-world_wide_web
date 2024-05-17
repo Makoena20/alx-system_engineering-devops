@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# This script audits DNS records for given domain and subdomains
+
+function get_record_info {
+    local subdomain=$1
+    local domain=$2
+    local result=$(dig +short "${subdomain}.${domain}")
+
+    if [ -z "$result" ]; then
+        echo "The subdomain ${subdomain} does not exist."
+    else
+        echo "The subdomain ${subdomain} is a A record and points to ${result}"
+    fi
+}
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
+
+domain=$1
+subdomain=$2
+
+if [ -z "$subdomain" ]; then
+    get_record_info "www" "$domain"
+    get_record_info "lb-01" "$domain"
+    get_record_info "web-01" "$domain"
+    get_record_info "web-02" "$domain"
+else
+    get_record_info "$subdomain" "$domain"
+fi
+
