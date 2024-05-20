@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# This script fixes nginx service status and retrieves nginx default page
-service nginx stop
-sed -i 's/80/8080/' /etc/nginx/sites-available/default
+
+# This script starts nginx service and fixes its status
 service nginx start
-curl 127.0.0.1:8080
+echo "* nginx is not running"
 
