@@ -9,3 +9,15 @@ sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/d
 # Restart Nginx service
 service nginx restart
 
+# Wait for Nginx to start listening on port 80
+sleep 5
+
+# Check if Nginx is responding with HTTP 200
+response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost)
+
+if [ $response -eq 200 ]; then
+    echo "Nginx is now listening on port 80 and returning HTTP 200."
+else
+    echo "Nginx is not returning HTTP 200 on port 80."
+fi
+
