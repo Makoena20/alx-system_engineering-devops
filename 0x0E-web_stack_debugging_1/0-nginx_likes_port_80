@@ -1,23 +1,10 @@
 #!/usr/bin/env bash
-# This script fixes Nginx configuration to listen on port 80 of all active IPv4 IPs
+# This Bash script fixes the issue preventing Nginx from listening on port 80
+# by ensuring the Nginx configuration is properly set up to listen on port 80
+# and restarting the Nginx service.
 
-# Install net-tools for ifconfig if not already installed
-if ! command -v ifconfig &>/dev/null; then
-    apt-get update
-    apt-get install -y net-tools
-fi
-
-# Get list of active IPv4 IPs
-ipv4_ips=$(ifconfig | awk '/inet /{print $2}' | grep -Eo '([0-9]*\.){3}[0-9]*')
-
-# Update Nginx configuration to listen on port 80 of all active IPv4 IPs
-nginx_config="/etc/nginx/sites-available/default"
-if [ -f "$nginx_config" ]; then
-    sed -i '/listen 80;/d' "$nginx_config"
-    for ip in $ipv4_ips; do
-        sed -i "/listen \[::]:80 default_server;/a \    listen $ip:80;" "$nginx_config"
-    done
-fi
+# Update Nginx configuration to listen on port 80
+sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
 
 # Restart Nginx service
 service nginx restart

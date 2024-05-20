@@ -1,35 +1,2 @@
-Get:1 http://security.ubuntu.com/ubuntu focal-security InRelease [114 kB]
-Hit:2 http://archive.ubuntu.com/ubuntu focal InRelease
-Hit:3 http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu focal InRelease
-Get:4 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
-Get:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease [108 kB]
-Get:6 http://security.ubuntu.com/ubuntu focal-security/universe amd64 Packages [1,205 kB]
-Get:7 http://security.ubuntu.com/ubuntu focal-security/main amd64 Packages [3,669 kB]
-Get:8 http://security.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [29.8 kB]
-Get:9 http://security.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [3,608 kB]
-Get:10 http://archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1,502 kB]
-Get:11 http://archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [32.5 kB]
-Get:12 http://archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [3,758 kB]
-Get:13 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [4,143 kB]
-Get:14 http://archive.ubuntu.com/ubuntu focal-backports/universe amd64 Packages [28.6 kB]
-Get:15 http://archive.ubuntu.com/ubuntu focal-backports/main amd64 Packages [55.2 kB]
-Fetched 18.4 MB in 23s (792 kB/s)
-Reading package lists...
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following NEW packages will be installed:
-  net-tools
-0 upgraded, 1 newly installed, 0 to remove and 264 not upgraded.
-Need to get 196 kB of archives.
-After this operation, 864 kB of additional disk space will be used.
-Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 net-tools amd64 1.60+git20180626.aebd88e-1ubuntu1 [196 kB]
-debconf: delaying package configuration, since apt-utils is not installed
-Fetched 196 kB in 0s (1,069 kB/s)
-Selecting previously unselected package net-tools.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 76367 files and directories currently installed.)
-Preparing to unpack .../net-tools_1.60+git20180626.aebd88e-1ubuntu1_amd64.deb ...
-Unpacking net-tools (1.60+git20180626.aebd88e-1ubuntu1) ...
-Setting up net-tools (1.60+git20180626.aebd88e-1ubuntu1) ...
-Processing triggers for man-db (2.9.1-1) ...
-nginx: unrecognized service
+ * Restarting nginx nginx
+   ...done.
