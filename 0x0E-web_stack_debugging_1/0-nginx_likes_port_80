@@ -1,50 +1,41 @@
 #!/usr/bin/env bash
-
 # This script fixes the issue of Nginx not listening on port 80 by adjusting its configuration
 
 # Update package lists
 apt-get update
 
 # Install necessary packages for debugging
-apt-get install -y net-tools curl nginx
-
-# Ensure Nginx is installed
-if ! dpkg -l | grep -q nginx; then
-    echo "Nginx is not installed. Installing Nginx..."
-    apt-get install -y nginx
-fi
+apt-get install -y net-tools curl
 
 # Check if Nginx is running
 nginx_status=$(service nginx status)
 
 if [[ $nginx_status == *"not running"* ]]; then
     # If Nginx is not running, start it
-    echo "Nginx is not running. Starting Nginx..."
     service nginx start
 else
-    echo "Nginx is already running."
+    # If Nginx is running, restart it to ensure changes are applied
+    service nginx restart
 fi
 
 # Check Nginx configuration for listening on port 80
 if ! grep -q "listen 80;" /etc/nginx/sites-available/default; then
     # If not configured, add it
-    echo "Configuring Nginx to listen on port 80..."
     sed -i '/listen 80 default_server;/a \\tlisten 80;' /etc/nginx/sites-available/default
-else
-    echo "Nginx is already configured to listen on port 80."
 fi
 
+# Test Nginx configuration for syntax errors
+nginx -t
+
 # Restart Nginx to apply changes
-echo "Restarting Nginx to apply changes..."
 service nginx restart
 
-# Check if Nginx is serving on port 80 and returning HTTP 200
-response=$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost)
-
-if [ "$response" -eq 200 ]; then
-    echo "Nginx is successfully serving on port 80 and returning HTTP 200."
+# Check if Nginx is listening on port 80 and returns HTTP 200
+response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost)
+if [[ $response -eq 200 ]]; then
+    echo "Nginx is successfully configured to listen on port 80 and is returning HTTP 200."
 else
-    echo "Failed to verify Nginx on port 80. HTTP response code: $response"
+    echo "Failed to configure Nginx to listen on port 80 or not returning HTTP 200."
     exit 1
 fi
 
