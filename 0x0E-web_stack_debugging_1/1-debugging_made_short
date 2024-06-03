@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# Configures an Nginx server to listen on port 80.
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-# restart nginx
-service nginx start
-# terminates the first nginx process
-kill "$(pgrep 'nginx' | head -1)"
+# This script checks if nginx is running, if not, it starts it
+if service nginx status | grep -q "not running"; then
+    service nginx start > /dev/null
+fi
+curl 0:80
 
