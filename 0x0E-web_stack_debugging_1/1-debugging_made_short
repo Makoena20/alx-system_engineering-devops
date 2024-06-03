@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-status=$(service nginx status)
-if [[ "$status" =~ "not running" ]] then
+# This script checks if nginx is running, if not, it starts it
+if service nginx status | grep -q "not running"; then
     service nginx start > /dev/null
 fi
 curl 0:80
