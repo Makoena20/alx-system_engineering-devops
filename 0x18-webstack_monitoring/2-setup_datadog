@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# This script sets up Datadog monitoring and creates a dashboard with widgets
+
+# Install Datadog Agent
+DD_API_KEY="YOUR_API_KEY"
+DD_AGENT_MAJOR_VERSION=7 bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+
+# Configure Datadog Agent
+cat <<EOF | sudo tee /etc/datadog-agent/datadog.yaml
+api_key: ${DD_API_KEY}
+EOF
+
+sudo systemctl restart datadog-agent
+
+# Create Dashboard via Datadog API
+dashboard_id=$(curl -X POST "https://api.datadoghq.com/api/v1/dashboard" \
+     -H "Content-Type: application/json" \
+     -H "DD-API-KEY: ${DD_API_KEY}" \
+     -d '{
+           "title": "My Dashboard",
+           "widgets": [
+             {
+               "type": "timeseries",
+               "title": "CPU Usage",
+               "definition": {
+                 "requests": [{"q": "avg:system.cpu.usage{*}"}],
+                 "viz": "timeseries"
+               }
+             },
+             {
+               "type": "timeseries",
+               "title": "Memory Usage",
+               "definition": {
+                 "requests": [{"q": "avg:system.mem.used{*}"}],
+                 "viz": "timeseries"
+               }
+             },
+             {
+               "type": "timeseries",
+               "title": "Network Traffic",
+               "definition": {
+                 "requests": [{"q": "avg:system.net.bytes{*} by {direction}"}],
+                 "viz": "timeseries"
+               }
+             },
+             {
+               "type": "toplist",
+               "title": "Top Processes",
+               "definition": {
+                 "requests": [{"q": "top(system.processes.cpu{*}, 10)"}],
+                 "viz": "toplist"
+               }
+             }
+           ]
+         }' | jq -r '.id')
+
+echo "$dashboard_id" > 2-setup_datadog
+
