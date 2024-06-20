@@ -1,15 +1,17 @@
-# This Puppet manifest ensures the required PHP module is installed to fix the Apache 500 error
+# Puppet manifest to fix Apache 500 error caused by missing directory or permissions
 
-# Ensure the PHP module is installed
-package { 'php5-mysql':
-  ensure => installed,
+# Ensure the directory /var/www/html/wp-content/uploads exists
+file { '/var/www/html/wp-content/uploads':
+  ensure  => 'directory',
+  owner   => 'www-data',
+  group   => 'www-data',
+  mode    => '0755',
 }
 
-# Restart Apache to apply changes
+# Optionally, ensure Apache service is running (if you need to restart it)
 service { 'apache2':
-  ensure     => running,
+  ensure     => 'running',
   enable     => true,
-  hasrestart => true,
-  require    => Package['php5-mysql'],
+  subscribe  => File['/var/www/html/wp-content/uploads'],
 }
 
