@@ -1,17 +1,19 @@
-# Puppet manifest to fix Apache 500 error caused by missing directory or permissions
+# This Puppet script fixes the 500 Internal Server Error in Apache by ensuring the necessary permissions and configuration.
 
-# Ensure the directory /var/www/html/wp-content/uploads exists
-file { '/var/www/html/wp-content/uploads':
-  ensure  => 'directory',
-  owner   => 'www-data',
-  group   => 'www-data',
-  mode    => '0755',
+exec { 'fix-permissions':
+  command => 'chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html',
+  onlyif  => 'find /var/www/html \! -user www-data -o \! -perm 755',
 }
 
-# Optionally, ensure Apache service is running (if you need to restart it)
 service { 'apache2':
-  ensure     => 'running',
-  enable     => true,
-  subscribe  => File['/var/www/html/wp-content/uploads'],
+  ensure => running,
+  enable => true,
+  require => Exec['fix-permissions'],
+}
+
+file { '/var/www/html/index.php':
+  ensure  => file,
+  content => '<?php echo "Holberton"; ?>',
+  require => Exec['fix-permissions'],
 }
 
