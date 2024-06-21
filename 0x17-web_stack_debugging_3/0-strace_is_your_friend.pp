@@ -1,17 +1,13 @@
-# 0-strace_is_your_friend.pp
-# This Puppet manifest ensures the required config.php file exists and has correct permissions
+# This Puppet manifest ensures the correct permissions for the web directory to fix Apache 500 error
 
-file { '/var/www/html/config.php':
-  ensure  => file,
-  content => "<?php\n// Configuration file\n?>",
-  mode    => '0644',
-  owner   => 'www-data',
-  group   => 'www-data',
+exec { 'fix-apache-permissions':
+  command => '/bin/chown -R www-data:www-data /var/www/html',
+  path    => ['/bin', '/usr/bin'],
 }
 
 service { 'apache2':
-  ensure    => running,
-  enable    => true,
-  subscribe => File['/var/www/html/config.php'], # Restart Apache if config.php changes
+  ensure  => 'running',
+  enable  => true,
+  require => Exec['fix-apache-permissions'],
 }
 
