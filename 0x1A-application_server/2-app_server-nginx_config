@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Install Nginx if not already installed
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Create Nginx configuration file for the app
+sudo bash -c 'cat > /etc/nginx/sites-available/2-app_server-nginx_config <<EOF
+server {
+    listen 80;
+    server_name _;
+
+    location /airbnb-onepage/ {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOF'
+
+# Enable the new Nginx configuration
+sudo ln -s /etc/nginx/sites-available/2-app_server-nginx_config /etc/nginx/sites-enabled/
+
+# Test the Nginx configuration
+sudo nginx -t
+
+# Reload Nginx to apply changes
+sudo systemctl reload nginx
+
+# Start the application server
+gunicorn --bind 0.0.0.0:5000 web_flask.0-hello_route:app
+
