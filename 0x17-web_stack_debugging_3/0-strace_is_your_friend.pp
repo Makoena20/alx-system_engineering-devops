@@ -1,17 +1,8 @@
-# This Puppet manifest ensures the /var/www/html/wp-content/uploads directory exists and has correct permissions to fix Apache 500 error.
+# This Puppet manifest ensures the /var/www/html/wp-content/uploads directory exists,
+# sets correct permissions, and restarts Apache to fix the 500 error.
 
-class apache_fix (
-  $directory_path,
-) {
-  file { $directory_path:
-    ensure  => 'directory',
-    owner   => 'www-data',
-    group   => 'www-data',
-    mode    => '0755',
-  }
-}
-
-class { 'apache_fix':
-  directory_path => '/var/www/html/wp-content/uploads',
+exec { 'fix-wordpress':
+  command => 'mkdir -p /var/www/html/wp-content/uploads && chown -R www-data:www-data /var/www/html && service apache2 restart',
+  path    => ['/bin', '/usr/bin'],
 }
 
