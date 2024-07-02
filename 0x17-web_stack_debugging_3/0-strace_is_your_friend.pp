@@ -1,11 +1,17 @@
-# This Puppet script fixes the Apache web stack by ensuring the correct permissions for the WordPress directory.
-# It does this by using the `file` resource to set the permissions for the directory.
+# This Puppet manifest ensures the /var/www/html/wp-content/uploads directory exists and has correct permissions to fix Apache 500 error.
 
-# Ensure the WordPress directory has the correct permissions.
-file { '/var/www/html/wp-content/themes/twentyseventeen/assets/images':
-  ensure  => 'directory',
-  mode    => '0755',
-  owner   => 'www-data',
-  group   => 'www-data',
-  require => File['/var/www/html'],
+class apache_fix (
+  $directory_path,
+) {
+  file { $directory_path:
+    ensure  => 'directory',
+    owner   => 'www-data',
+    group   => 'www-data',
+    mode    => '0755',
+  }
 }
+
+class { 'apache_fix':
+  directory_path => '/var/www/html/wp-content/uploads',
+}
+
