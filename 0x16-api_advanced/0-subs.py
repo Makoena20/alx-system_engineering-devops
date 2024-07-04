@@ -4,6 +4,7 @@ This module contains the function number_of_subscribers.
 """
 
 import requests
+import sys
 
 def number_of_subscribers(subreddit):
     """
@@ -29,16 +30,12 @@ def number_of_subscribers(subreddit):
         return 0
 
 if __name__ == '__main__':
-    import sys
-    
     if len(sys.argv) < 2:
         print("Please pass an argument for the subreddit to search.")
     else:
         subreddit = sys.argv[1]
         subscribers = number_of_subscribers(subreddit)
         
-        if subscribers == 0:
-            print(f"Subreddit '{subreddit}' does not exist or an error occurred.")
-        else:
-            print(f"The subreddit '{subreddit}' has {subscribers} subscribers.")
+        print(subscribers)
+
 
